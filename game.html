@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+<title>Teman Lucu</title>
+<link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ffe9d6;--card:#fff;--ink:#4a2c40;--pink:#ff7aa8;--mint:#5fd6a4;--sun:#ffc94d;--sky:#6cb8ff;--line:#4a2c40}
+@media (prefers-color-scheme:dark){:root{--bg:#2c1d3a;--card:#3f2b52;--ink:#fff1e6;--line:#fff1e6}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;height:100%}
+body{font-family:'Baloo 2',system-ui,sans-serif;background:var(--bg);color:var(--ink);display:flex;justify-content:center;overflow:hidden;
+ background-image:radial-gradient(circle at 20% 15%,#ffffff55 0 60px,transparent 61px),radial-gradient(circle at 85% 80%,#ffffff40 0 90px,transparent 91px)}
+#app{width:100%;max-width:440px;height:100%;position:relative}
+.screen{display:none;position:absolute;inset:0;padding:16px;flex-direction:column;align-items:center;overflow-y:auto}
+.screen.on{display:flex}
+h1{font-size:44px;line-height:1;margin:8px 0;font-weight:800;text-align:center;transform:rotate(-2deg)}
+h2{margin:6px 0 10px;font-size:26px;font-weight:800}
+.btn{font:inherit;font-weight:700;font-size:20px;color:var(--ink);background:var(--sun);border:3px solid var(--line);border-radius:18px;padding:10px 22px;box-shadow:0 5px 0 var(--line);cursor:pointer;transition:transform .08s,box-shadow .08s}
+.btn:active{transform:translateY(4px);box-shadow:0 1px 0 var(--line)}
+.btn:focus-visible,.ch:focus-visible{outline:4px solid var(--sky);outline-offset:3px}
+.btn.pk{background:var(--pink)}.btn.mn{background:var(--mint)}.btn.sk{background:var(--sky)}
+.btn.sm{font-size:16px;padding:6px 14px;box-shadow:0 3px 0 var(--line)}
+.btn[disabled]{opacity:.45}
+.hero{font-size:130px;line-height:1;margin:14px 0 6px;animation:bob 1.6s ease-in-out infinite;filter:drop-shadow(0 8px 0 #0002)}
+@keyframes bob{50%{transform:translateY(-14px) rotate(3deg)}}
+.col{display:flex;flex-direction:column;gap:14px;width:100%;max-width:300px;align-items:stretch;margin-top:12px}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;width:100%;margin:8px 0}
+.ch{font:inherit;color:var(--ink);background:var(--card);border:3px solid var(--line);border-radius:22px;padding:10px 4px;text-align:center;cursor:pointer;box-shadow:0 4px 0 var(--line)}
+.ch b{display:block;font-size:15px}.ch span{font-size:50px;display:block;line-height:1.1}
+.ch.sel{background:var(--sun);transform:rotate(-3deg) scale(1.05)}
+input{font:inherit;font-size:20px;text-align:center;width:100%;padding:8px;border:3px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink)}
+.top{display:flex;justify-content:space-between;align-items:center;width:100%;gap:8px}
+.coin{background:var(--card);border:3px solid var(--line);border-radius:999px;padding:2px 14px;font-weight:800;font-size:20px}
+.room{width:100%;border:3px solid var(--line);border-radius:26px;margin:10px 0;text-align:center;padding:8px 0 4px;position:relative;transition:background .4s}
+.room .hero{font-size:110px;margin:4px 0}
+.mood{position:absolute;top:8px;right:14px;font-size:34px}
+.bars{display:grid;grid-template-columns:1fr 1fr;gap:6px 14px;width:100%}
+.bar{font-size:14px;font-weight:700}
+.bar i{display:block;height:12px;border-radius:9px;border:2px solid var(--line);background:var(--card);overflow:hidden;margin-top:1px}
+.bar u{display:block;height:100%;transition:width .4s}
+.acts{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;width:100%;margin-top:12px}
+.acts .btn{padding:8px 2px;font-size:15px;line-height:1.1;box-shadow:0 4px 0 var(--line)}
+.acts .btn span{font-size:28px;display:block}
+.gm{display:flex;align-items:center;gap:14px;background:var(--card);border:3px solid var(--line);border-radius:20px;padding:12px 16px;width:100%;margin:6px 0;cursor:pointer;font:inherit;color:var(--ink);text-align:left;box-shadow:0 4px 0 var(--line)}
+.gm span{font-size:42px}.gm b{font-size:20px;display:block}.gm small{font-size:14px}
+.ms{display:flex;align-items:center;gap:10px;background:var(--card);border:3px solid var(--line);border-radius:16px;padding:8px 12px;width:100%;margin:5px 0;font-weight:600}
+.ms div{flex:1}.ms small{display:block;font-weight:500;opacity:.75}
+canvas{width:100%;max-width:400px;border:3px solid var(--line);border-radius:22px;touch-action:none;background:#bfe6ff;margin-top:6px}
+.over{position:absolute;inset:0;background:#000a;display:none;align-items:center;justify-content:center;z-index:5;flex-direction:column;color:#fff;font-size:26px;text-align:center;gap:10px}
+.over.on{display:flex}
+#toast{position:fixed;left:50%;top:16px;transform:translate(-50%,-90px);background:var(--ink);color:var(--bg);padding:8px 18px;border-radius:999px;font-weight:700;z-index:9;transition:transform .3s}
+#toast.on{transform:translate(-50%,0)}
+#mute{position:fixed;right:10px;bottom:10px;z-index:8;width:44px;height:44px;border-radius:50%;font-size:22px;padding:0;line-height:1}
+.screen{padding-bottom:62px}
+@media (prefers-reduced-motion:reduce){.hero{animation:none}}
+</style>
+</head>
+<body>
+<div id="app">
+
+<section class="screen on" id="s-start">
+  <h1>Teman<br>Lucu!</h1>
+  <div class="hero" id="startHero">🐱</div>
+  <h2 id="startName">Mimi</h2>
+  <div class="col">
+    <button class="btn mn" onclick="show('home')">▶ Langsung bermain</button>
+    <button class="btn pk" onclick="show('pick')">🔄 Ganti karakter</button>
+  </div>
+</section>
+
+<section class="screen" id="s-pick">
+  <h2>Pilih temanmu</h2>
+  <div class="grid" id="chGrid"></div>
+  <input id="nameIn" maxlength="10" placeholder="Beri nama" aria-label="Nama karakter">
+  <div class="col"><button class="btn mn" onclick="confirmPick()">Pilih dia!</button></div>
+</section>
+
+<section class="screen" id="s-home">
+  <div class="top"><button class="btn sm" onclick="show('start')">⌂</button><b id="hName" style="font-size:22px"></b><div class="coin">🪙 <span id="coin">0</span></div></div>
+  <div class="room" id="room"><div class="mood" id="mood">😊</div><div class="hero" id="hHero"></div></div>
+  <div class="bars" id="bars"></div>
+  <div class="acts">
+    <button class="btn" onclick="act('feed')"><span>🍎</span>Makan 🪙5</button>
+    <button class="btn sk" onclick="act('bath')"><span>🛁</span>Mandi</button>
+    <button class="btn" style="background:#b9a4ff" onclick="act('sleep')"><span>🌙</span>Tidur</button>
+    <button class="btn pk" onclick="show('games')"><span>🎮</span>Main</button>
+  </div>
+  <div class="col" style="max-width:none;margin-top:14px"><button class="btn mn" onclick="show('missions')">📋 Misi harian <span id="msBadge"></span></button></div>
+</section>
+
+<section class="screen" id="s-games">
+  <div class="top"><button class="btn sm" onclick="show('home')">←</button><h2 style="margin:0">Pilih game</h2><div class="coin">🪙 <span class="coinS">0</span></div></div>
+  <div style="width:100%;margin-top:10px">
+    <button class="gm" onclick="play('dodge')"><span>🪨</span><div><b>Hindari!</b><small>Geser untuk menghindari benda jatuh</small></div></button>
+    <button class="gm" onclick="play('jump')"><span>🌵</span><div><b>Lompat!</b><small>Ketuk layar untuk melompati rintangan</small></div></button>
+    <button class="gm" onclick="play('catch')"><span>🍓</span><div><b>Tangkap Buah</b><small>Ambil buah, hindari bom</small></div></button>
+  </div>
+</section>
+
+<section class="screen" id="s-game" style="padding-top:8px">
+  <div class="top"><button class="btn sm" onclick="quit()">✕</button><b id="hud" style="font-size:20px"></b></div>
+  <canvas id="cv" width="360" height="480"></canvas>
+  <div class="over" id="over"><div id="overTxt"></div><button class="btn mn" onclick="play(cur)">Main lagi</button><button class="btn sk" onclick="show('games')">Pilih game</button><button class="btn" onclick="show('home')">Pulang</button></div>
+</section>
+
+<section class="screen" id="s-missions">
+  <div class="top"><button class="btn sm" onclick="show('home')">←</button><h2 style="margin:0">Misi harian</h2><div class="coin">🪙 <span class="coinS">0</span></div></div>
+  <div id="msList" style="width:100%;margin-top:10px"></div>
+</section>
+
+</div>
+<div id="toast"></div>
+<button class="btn sm sk" id="mute" onclick="toggleMute()" aria-label="Suara">🔊</button>
+
+<script>
+const CH=[{e:'🐱',n:'Mimi',c:'#ffd6e0'},{e:'🐶',n:'Bobo',c:'#ffe3b0'},{e:'🐰',n:'Kiki',c:'#e3d6ff'},{e:'🐸',n:'Koko',c:'#c9f3cf'},{e:'🐥',n:'Piyo',c:'#fff3a8'},{e:'🐼',n:'Pandi',c:'#d6e4ff'}];
+const $=id=>document.getElementById(id);
+const today=()=>new Date().toISOString().slice(0,10);
+const MS=[
+ {k:'feed',t:'Beri makan 3 kali',g:3,r:15},
+ {k:'bath',t:'Mandikan 2 kali',g:2,r:15},
+ {k:'sleep',t:'Tidurkan 1 kali',g:1,r:10},
+ {k:'play',t:'Main game 3 kali',g:3,r:20},
+ {k:'earn',t:'Kumpulkan 40 koin dari game',g:40,r:25}
+];
+let S={ch:0,name:'Mimi',coin:20,hunger:80,fun:80,energy:80,clean:80,day:today(),m:{},claimed:{}};
+try{Object.assign(S,JSON.parse(localStorage.getItem('temanlucu')||'{}'))}catch(e){}
+if(S.day!==today()){S.day=today();S.m={};S.claimed={}}
+function save(){try{localStorage.setItem('temanlucu',JSON.stringify(S))}catch(e){}}
+function toast(t){const x=$('toast');x.textContent=t;x.classList.add('on');clearTimeout(toast.h);toast.h=setTimeout(()=>x.classList.remove('on'),1600)}
+function prog(k,n=1){S.m[k]=(S.m[k]||0)+n;save()}
+
+/* ===== SUARA (dibuat langsung dengan Web Audio, tanpa file) ===== */
+let AC=null,muted=false,mm=null,mt=0;
+try{muted=localStorage.getItem('tl_mute')==='1'}catch(e){}
+function ac(){if(!AC){try{AC=new(window.AudioContext||window.webkitAudioContext)()}catch(e){}}if(AC&&AC.state==='suspended')AC.resume();return AC}
+function tone(f,d=.12,type='sine',v=.15,t0=0,to){
+  if(muted)return;const a=ac();if(!a)return;const t=a.currentTime+t0;
+  const o=a.createOscillator(),g=a.createGain();o.type=type;o.frequency.setValueAtTime(f,t);
+  if(to)o.frequency.exponentialRampToValueAtTime(to,t+d);
+  g.gain.setValueAtTime(v,t);g.gain.exponentialRampToValueAtTime(.001,t+d);
+  o.connect(g);g.connect(a.destination);o.start(t);o.stop(t+d+.03);
+}
+const SFX={
+  click:()=>tone(700,.07,'triangle',.1),
+  feed:()=>{[0,.11,.22].forEach(t=>tone(300,.09,'square',.08,t,180))},
+  bath:()=>{for(let i=0;i<6;i++)tone(500+Math.random()*700,.1,'sine',.09,i*.07,1400)},
+  sleep:()=>{[523,440,392,330,262].forEach((f,i)=>tone(f,.5,'sine',.1,i*.3))},
+  coin:()=>{tone(988,.08,'square',.09);tone(1319,.25,'square',.09,.08)},
+  good:()=>{tone(660,.08,'triangle',.14);tone(880,.12,'triangle',.14,.07)},
+  jump:()=>tone(300,.2,'sine',.16,0,700),
+  hit:()=>{tone(220,.3,'sawtooth',.14,0,70)},
+  no:()=>{tone(200,.15,'square',.08);tone(160,.2,'square',.08,.12)},
+  over:()=>{[392,330,262,196].forEach((f,i)=>tone(f,.3,'triangle',.14,i*.18));setTimeout(SFX.coin,900)}
+};
+const TR={
+  home:{s:.36,d:.3,w:'triangle',v:.06,b:[131,131,175,196],m:[523,0,392,0,440,392,330,0,294,330,392,0,330,294,262,0]},
+  game:{s:.16,d:.12,w:'square',v:.03,b:[131,131,175,196],m:[392,392,523,392,440,440,523,440,330,392,440,392,294,330,392,330]}
+};
+function music(mode){
+  if(mode===mm)return;mm=mode;clearInterval(mt);if(!mode)return;
+  const T=TR[mode];let i=0;
+  mt=setInterval(()=>{
+    if(muted||!AC)return;const n=T.m[i%T.m.length];
+    if(n)tone(n,T.d,T.w,T.v);
+    if(i%4===0)tone(T.b[(i/4|0)%T.b.length],T.d*3,'sine',.07);
+    i++;
+  },T.s*1000);
+}
+function toggleMute(){
+  muted=!muted;try{localStorage.setItem('tl_mute',muted?'1':'0')}catch(e){}
+  $('mute').textContent=muted?'🔇':'🔊';if(!muted){ac();SFX.click()}
+}
+$('mute').textContent=muted?'🔇':'🔊';
+document.addEventListener('click',e=>{if(e.target.closest('.btn,.ch,.gm')&&!e.target.closest('#mute'))SFX.click()});
+
+let scr='start';
+function show(id){
+  scr=id;
+  music(id==='game'?'game':'home');
+  document.querySelectorAll('.screen').forEach(s=>s.classList.toggle('on',s.id==='s-'+id));
+  if(id!=='game'){stop()}
+  render();
+}
+function render(){
+  const c=CH[S.ch];
+  $('startHero').textContent=c.e;$('startName').textContent=S.name;
+  $('hHero').textContent=c.e;$('hName').textContent=S.name;
+  $('room').style.background=c.c;
+  document.querySelectorAll('.coinS').forEach(x=>x.textContent=S.coin);
+  $('coin').textContent=S.coin;
+  const B=[['Kenyang','hunger','#ff9f5a'],['Senang','fun','#ff7aa8'],['Energi','energy','#ffc94d'],['Bersih','clean','#6cb8ff']];
+  $('bars').innerHTML=B.map(b=>`<div class="bar">${b[0]}<i><u style="width:${S[b[1]]}%;background:${b[2]}"></u></i></div>`).join('');
+  const avg=(S.hunger+S.fun+S.energy+S.clean)/4;
+  $('mood').textContent=avg>70?'😊':avg>40?'😐':'😢';
+  const rd=MS.filter(m=>(S.m[m.k]||0)>=m.g&&!S.claimed[m.k]).length;
+  $('msBadge').textContent=rd?'🎁'+rd:'';
+  if(scr==='missions')renderMs();
+}
+function renderMs(){
+  $('msList').innerHTML=MS.map(m=>{
+    const p=Math.min(S.m[m.k]||0,m.g),done=p>=m.g,cl=S.claimed[m.k];
+    return `<div class="ms"><div>${m.t}<small>${p}/${m.g} · hadiah 🪙${m.r}</small></div>${cl?'✅':`<button class="btn sm mn" ${done?'':'disabled'} onclick="claim('${m.k}')">Ambil</button>`}</div>`}).join('');
+}
+function claim(k){const m=MS.find(x=>x.k===k);S.claimed[k]=1;S.coin+=m.r;SFX.coin();save();toast('+'+m.r+' koin!');render()}
+const clamp=v=>Math.max(0,Math.min(100,v));
+function act(a){
+  if(a==='feed'){
+    if(S.coin<5){SFX.no();return toast('Koin kurang. Main game dulu!')};
+    S.coin-=5;SFX.feed();S.hunger=clamp(S.hunger+25);S.fun=clamp(S.fun+3);prog('feed');toast('Nyam nyam! 😋');
+  }else if(a==='bath'){SFX.bath();S.clean=clamp(S.clean+35);S.fun=clamp(S.fun+3);prog('bath');toast('Wangi dan bersih! 🫧')}
+  else if(a==='sleep'){
+    SFX.sleep();S.energy=clamp(S.energy+45);prog('sleep');toast('Zzz... 😴');
+    document.body.style.filter='brightness(.4)';setTimeout(()=>document.body.style.filter='',1600);
+  }
+  save();render();
+}
+setInterval(()=>{S.hunger=clamp(S.hunger-1);S.clean=clamp(S.clean-.7);S.energy=clamp(S.energy-.6);S.fun=clamp(S.fun-.8);save();if(scr==='home'){render();if(S.hunger<20)toast(S.name+' lapar! 🍎')}},6000);
+
+/* pilih karakter */
+let pickI=S.ch;
+function buildPick(){
+  $('chGrid').innerHTML=CH.map((c,i)=>`<button class="ch ${i===pickI?'sel':''}" onclick="selCh(${i})"><span>${c.e}</span><b>${c.n}</b></button>`).join('');
+}
+function selCh(i){pickI=i;$('nameIn').value=CH[i].n;buildPick()}
+function confirmPick(){S.ch=pickI;S.name=($('nameIn').value.trim()||CH[pickI].n);save();show('home')}
+const _show=show;
+show=function(id){if(id==='pick'){pickI=S.ch;$('nameIn').value=S.name;buildPick()}_show(id)};
+
+/* ===== GAME ===== */
+const cv=$('cv'),cx=cv.getContext('2d'),W=360,H=480;
+let cur='dodge',G=null,raf=0,last=0,keys={};
+const NAMES={dodge:'Hindari!',jump:'Lompat!',catch:'Tangkap Buah'};
+function play(t){
+  cur=t;stop();
+  G={score:0,lives:3,t:0,items:[],sp:0,px:W/2,tx:W/2,py:H-70,vy:0,over:false,ground:H-70};
+  $('over').classList.remove('on');
+  show('game');last=performance.now();raf=requestAnimationFrame(loop);
+}
+function stop(){cancelAnimationFrame(raf);raf=0}
+function quit(){stop();show('games')}
+function loop(n){
+  const dt=Math.min(.05,(n-last)/1000);last=n;
+  if(!G.over){update(dt);draw()}
+  if(!G.over)raf=requestAnimationFrame(loop);
+}
+function update(dt){
+  G.t+=dt;G.sp-=dt;G.score+=cur==='catch'?0:dt*10;
+  const lvl=1+G.t/20;
+  if(cur!=='jump'){
+    if(keys.ArrowLeft)G.tx-=420*dt;if(keys.ArrowRight)G.tx+=420*dt;
+    G.tx=Math.max(24,Math.min(W-24,G.tx));G.px+=(G.tx-G.px)*Math.min(1,dt*14);
+    if(G.sp<=0){
+      G.sp=(cur==='dodge'?.7:.8)/lvl;
+      const good=cur==='catch'&&Math.random()<.7;
+      const set=good?['🍎','🍓','🍌','🍇']:cur==='catch'?['💣']:['🪨','💣','🌵','⚡'];
+      G.items.push({x:30+Math.random()*(W-60),y:-20,v:(130+Math.random()*60)*lvl,e:set[Math.random()*set.length|0],good});
+    }
+    for(const i of G.items){i.y+=i.v*dt;
+      if(!i.d&&Math.abs(i.x-G.px)<32&&Math.abs(i.y-G.py)<34){i.d=1;
+        if(i.good){G.score+=5;SFX.good()}else hit()}}
+    G.items=G.items.filter(i=>!i.d&&i.y<H+30);
+  }else{
+    G.vy+=1500*dt;G.py+=G.vy*dt;if(G.py>=G.ground){G.py=G.ground;G.vy=0}
+    if(G.sp<=0){G.sp=(1.1+Math.random()*.9)/Math.sqrt(lvl);G.items.push({x:W+20,y:G.ground+4,v:230*lvl,e:Math.random()<.5?'🌵':'🪨'})}
+    for(const i of G.items){i.x-=i.v*dt;
+      if(!i.d&&Math.abs(i.x-80)<28&&G.py>G.ground-32){i.d=1;hit()}}
+    G.items=G.items.filter(i=>!i.d&&i.x>-30);
+  }
+  $('hud').textContent=`❤️ ${G.lives}   ⭐ ${Math.floor(G.score)}`;
+}
+function hit(){SFX.hit();G.lives--;G.shake=.25;if(navigator.vibrate)navigator.vibrate(60);if(G.lives<=0)end()}
+function end(){
+  G.over=true;stop();music(null);SFX.over();
+  const sc=Math.floor(G.score),co=Math.max(1,Math.floor(sc/4));
+  S.coin+=co;S.fun=clamp(S.fun+20);S.energy=clamp(S.energy-10);S.hunger=clamp(S.hunger-8);
+  prog('play');prog('earn',co);
+  const bk='hs_'+cur;S[bk]=Math.max(S[bk]||0,sc);save();
+  $('overTxt').innerHTML=`${CH[S.ch].e} Game selesai!<br>Skor ${sc} (rekor ${S[bk]})<br>+${co} koin 🪙`;
+  $('over').classList.add('on');
+}
+function draw(){
+  const sky=cx.createLinearGradient(0,0,0,H);sky.addColorStop(0,'#9fd8ff');sky.addColorStop(1,'#e8f8ff');
+  cx.fillStyle=sky;cx.fillRect(0,0,W,H);
+  cx.textAlign='center';cx.textBaseline='middle';
+  cx.font='40px serif';cx.globalAlpha=.7;cx.fillText('☁️',70+(G.t*8%420)-30,60);cx.fillText('☁️',260-(G.t*5%300)+30,130);cx.globalAlpha=1;
+  cx.fillStyle='#7ad77f';
+  const gy=cur==='jump'?G.ground+22:H-36;cx.fillRect(0,gy,W,H-gy);
+  cx.fillStyle='#5cbf63';cx.fillRect(0,gy,W,6);
+  cx.save();
+  if(G.shake>0){G.shake-=.016;cx.translate((Math.random()-.5)*8,0)}
+  cx.font='36px serif';
+  for(const i of G.items)cx.fillText(i.e,i.x,i.y);
+  cx.font='46px serif';
+  const x=cur==='jump'?80:G.px,y=G.py;
+  cx.fillText(CH[S.ch].e,x,y);
+  cx.restore();
+}
+cv.addEventListener('pointermove',e=>{if(cur!=='jump'){const r=cv.getBoundingClientRect();G.tx=(e.clientX-r.left)/r.width*W}});
+cv.addEventListener('pointerdown',e=>{
+  if(!G||G.over)return;
+  if(cur==='jump'){if(G.py>=G.ground){G.vy=-640;SFX.jump()}}
+  else{const r=cv.getBoundingClientRect();G.tx=(e.clientX-r.left)/r.width*W}
+});
+addEventListener('keydown',e=>{
+  keys[e.key]=1;
+  if((e.key===' '||e.key==='ArrowUp')&&scr==='game'&&cur==='jump'&&G&&!G.over&&G.py>=G.ground){G.vy=-640;SFX.jump();e.preventDefault()}
+});
+addEventListener('keyup',e=>keys[e.key]=0);
+
+render();
+</script>
+</body>
+</html>
